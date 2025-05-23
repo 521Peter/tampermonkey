@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         cwm-srcipt-runner
 // @namespace    http://tampermonkey.net/
-// @version      1.4
+// @version      1.5
 // @description  try to take over the world!
 // @author       lgh
 // @match        https://cwm.gamegoing.com/strategy/meticulous/list
@@ -157,7 +157,6 @@
         if (!editBtn) throw new Error("找不到编辑按钮");
         editBtn.click();
 
-        // await Utils.sleep(2500);
         await Utils.waitForValue(".ivu-select-input");
 
         // 3. 点击下一步按钮
@@ -238,6 +237,7 @@
           Data.url
         )}.js`;
       }
+      configObj.urls[0] = firstUrlObj;
       return configObj;
     },
   };
