@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         cwm-srcipt-runner
 // @namespace    http://tampermonkey.net/
-// @version      1.3
+// @version      1.4
 // @description  try to take over the world!
 // @author       lgh
 // @match        https://cwm.gamegoing.com/strategy/meticulous/list
@@ -86,6 +86,28 @@
         return "default";
       }
     },
+
+    waitForValue(selector, interval = 200, timeout = 10000) {
+      return new Promise((resolve, reject) => {
+        const startTime = Date.now();
+
+        const checkInterval = setInterval(() => {
+          const element = document.querySelector(selector);
+
+          // 如果元素存在且有值
+          if (element && element.value) {
+            clearInterval(checkInterval);
+            resolve(element.value);
+          }
+
+          // 如果超时
+          if (Date.now() - startTime > timeout) {
+            clearInterval(checkInterval);
+            reject(new Error(`Timeout waiting for value of ${selector}`));
+          }
+        }, interval);
+      });
+    },
   };
 
   // DOM操作模块
@@ -135,7 +157,8 @@
         if (!editBtn) throw new Error("找不到编辑按钮");
         editBtn.click();
 
-        await Utils.sleep(2500);
+        // await Utils.sleep(2500);
+        await Utils.waitForValue(".ivu-select-input");
 
         // 3. 点击下一步按钮
         const nextStepBtns = document.querySelectorAll(
@@ -159,11 +182,6 @@
 
         const configObj = JSON.parse(configStr);
 
-        // configObj.urls[0].url = url;
-        // configObj.urls[0].jsCode = `${
-        //   CONFIG.jsCodeBase
-        // }${Utils.getFileNameFromUrl(url)}.js`;
-        // Utils.simulateInput(textareas[1], JSON.stringify(configObj, null, 2));
         Utils.simulateInput(
           textareas[1],
           JSON.stringify(this.setConfig(configObj), null, 2)
