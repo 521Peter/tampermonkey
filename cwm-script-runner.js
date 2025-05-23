@@ -1,3 +1,16 @@
+// ==UserScript==
+// @name         cwm-srcipt-runner
+// @namespace    http://tampermonkey.net/
+// @version      1.1
+// @description  try to take over the world!
+// @author       You
+// @match        https://cwm.gamegoing.com/strategy/meticulous/list
+// @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
+// @grant        none
+// @updateURL    https://raw.githubusercontent.com/521Peter/tampermonkey/refs/heads/master/cwm-script-runner.js?token=GHSAT0AAAAAADCYFBPSR3XH5AANYRBIIW6Y2BQCE7Q
+// @downloadURL  https://raw.githubusercontent.com/521Peter/tampermonkey/refs/heads/master/cwm-script-runner.js?token=GHSAT0AAAAAADCYFBPSR3XH5AANYRBIIW6Y2BQCE7Q
+// ==/UserScript==
+
 (function () {
   "use strict";
   console.log("123");
