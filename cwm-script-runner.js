@@ -263,8 +263,6 @@
     const button = DomHelper.createElement("button", CONFIG.buttonStyle);
     button.textContent = "执行";
 
-    Data.isProd = false;
-
     button.addEventListener("click", async () => {
       const url = input.value.trim();
       if (!url) {
