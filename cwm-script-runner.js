@@ -222,7 +222,9 @@
       if (Data.isProd) {
         firstUrlObj = {
           ...firstUrlObj,
-          url: "https://tpl.stargamedjs.net/tpl/t/test.html?l=" + Data.url,
+          url:
+            "https://tpl.stargamedjs.net/tpl/t/test.html?l=" +
+            encodeURIComponent(Data.url),
           name: "name:minigame,groupRate:1,limit:4000,level:1,childRate:0,transformRate:1,actions:scrollend.T4000_click",
           ads_rate: 1,
           full_rate: 1,
