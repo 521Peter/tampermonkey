@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         cwm-srcipt-runner
 // @namespace    http://tampermonkey.net/
-// @version      1.2
+// @version      1.3
 // @description  try to take over the world!
 // @author       lgh
 // @match        https://cwm.gamegoing.com/strategy/meticulous/list
@@ -135,7 +135,7 @@
         if (!editBtn) throw new Error("找不到编辑按钮");
         editBtn.click();
 
-        await Utils.sleep(2000);
+        await Utils.sleep(2500);
 
         // 3. 点击下一步按钮
         const nextStepBtns = document.querySelectorAll(
