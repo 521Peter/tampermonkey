@@ -7,8 +7,8 @@
 // @match        https://cwm.gamegoing.com/strategy/meticulous/list
 // @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
 // @grant        none
-// @updateURL    https://raw.githubusercontent.com/521Peter/tampermonkey/refs/heads/master/cwm-script-runner.js?token=GHSAT0AAAAAADCYFBPSR3XH5AANYRBIIW6Y2BQCE7Q
-// @downloadURL  https://raw.githubusercontent.com/521Peter/tampermonkey/refs/heads/master/cwm-script-runner.js?token=GHSAT0AAAAAADCYFBPSR3XH5AANYRBIIW6Y2BQCE7Q
+// @updateURL    https://raw.githubusercontent.com/521Peter/tampermonkey/refs/heads/master/cwm-script-runner.js
+// @downloadURL  https://raw.githubusercontent.com/521Peter/tampermonkey/refs/heads/master/cwm-script-runner.js
 // ==/UserScript==
 
 (function () {
