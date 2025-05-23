@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      1.2
 // @description  try to take over the world!
-// @author       You
+// @author       lgh
 // @match        https://cwm.gamegoing.com/strategy/meticulous/list
 // @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
 // @grant        none
