@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         cwm-srcipt-runner
+// @name         insert-reset
 // @namespace    http://tampermonkey.net/
 // @version      1.6
 // @description  steamBack脚本
