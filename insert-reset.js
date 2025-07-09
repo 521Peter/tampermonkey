@@ -4,7 +4,7 @@
 // @version      1.6
 // @description  steamBack脚本
 // @author       lgh
-// @match        https://*/*
+// @match        *://*/*
 // @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
 // @grant        none
 // @updateURL    https://raw.githubusercontent.com/521Peter/tampermonkey/refs/heads/master/insert-reset.js
