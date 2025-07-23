@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         insert-reset
 // @namespace    http://tampermonkey.net/
-// @version      1.7
+// @version      1.8
 // @description  steamBack脚本
 // @author       lgh
 // @match        *://*/*
