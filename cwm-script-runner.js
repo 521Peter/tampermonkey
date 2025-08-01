@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         cwm-srcipt-runner
 // @namespace    http://tampermonkey.net/
-// @version      1.6
+// @version      1.7
 // @description  try to take over the world!
 // @author       lgh
 // @match        https://cwm.gamegoing.com/strategy/meticulous/list
@@ -58,7 +58,7 @@
   };
 
   const Data = {
-    isProd: false,
+    showTheme: true,
     url: "",
   };
 
@@ -219,27 +219,14 @@
     },
     setConfig(configObj) {
       let firstUrlObj = configObj.urls[0];
-      if (Data.isProd) {
+      if (Data.url) {
         firstUrlObj = {
           ...firstUrlObj,
-          url:
-            "https://tpl.stargamedjs.net/tpl/t/test.html?l=" +
-            encodeURIComponent(Data.url),
-          name: "name:minigame,groupRate:1,limit:4000,level:1,childRate:0,transformRate:1,actions:scrollend.T4000_click",
-          ads_rate: 1,
-          full_rate: 1,
-          banner_rate: 1,
-          jsCode: CONFIG.jsCodeBase_Prod,
-          jsReplace: CONFIG.jsReplace_Prod,
-          reset: CONFIG.reset_Prod,
+          url: Data.url,
         };
-      } else {
-        firstUrlObj.url = Data.url;
-        firstUrlObj.jsCode = `${CONFIG.jsCodeBase}${Utils.getFileNameFromUrl(
-          Data.url
-        )}.js`;
       }
       configObj.urls[0] = firstUrlObj;
+      configObj.showTheme = Data.showTheme ? 1 : 0;
       return configObj;
     },
   };
@@ -263,7 +250,8 @@
     // 创建复选框
     const checkbox = DomHelper.createElement("input", CONFIG.checkboxStyle, {
       type: "checkbox",
-      id: "isProdCheckbox",
+      id: "showThemeCheckbox",
+      checked: Data.showTheme,
     });
 
     // 创建复选框标签
@@ -271,12 +259,12 @@
       "label",
       CONFIG.checkboxLabelStyle
     );
-    checkboxLabel.setAttribute("for", "isProdCheckbox");
-    checkboxLabel.textContent = "生产环境";
+    checkboxLabel.setAttribute("for", "showThemeCheckbox");
+    checkboxLabel.textContent = "非人机";
 
     // 添加复选框事件监听器
     checkbox.addEventListener("change", (e) => {
-      Data.isProd = e.target.checked;
+      Data.showTheme = e.target.checked;
     });
 
     // 创建按钮
@@ -285,11 +273,7 @@
 
     button.addEventListener("click", async () => {
       const url = input.value.trim();
-      if (!url) {
-        alert("url不能为空");
-        return;
-      }
-      Data.url = url;
+      Data.url = url || "";
       await BusinessLogic.updateConfig();
       input.value = "";
     });
