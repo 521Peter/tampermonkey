@@ -4,7 +4,7 @@
 // @version      1.7
 // @description  try to take over the world!
 // @author       lgh
-// @match        https://cwm.gamegoing.com/strategy/meticulous/list
+// @match        https://cwm.gamegoing.com/strategy/*
 // @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
 // @grant        none
 // @updateURL    https://raw.githubusercontent.com/521Peter/tampermonkey/refs/heads/master/cwm-script-runner.js
@@ -50,7 +50,7 @@
     checkboxLabelStyle: {
       fontSize: "14px",
     },
-    defaultName: "sdk_Test_ios_lgh",
+    defaultName: "",
     jsCodeBase: "http://192.168.101.182:5500/dev/",
     jsCodeBase_Prod: "https://pic.stargamedjs.net/ext/v0.2.4-stream.js",
     jsReplace_Prod: "https://pic.stargamedjs.net/ext/v0.2.4-iframe.js",
@@ -60,6 +60,9 @@
   const Data = {
     showTheme: true,
     url: "",
+    userName: CONFIG.defaultName,
+    isCollapsed: false,
+    transformUrl: string,
   };
 
   // 工具函数
@@ -135,7 +138,7 @@
           '.ivu-input-wrapper > input[type="text"]'
         );
         if (nameInputs.length < 2) throw new Error("找不到名称输入框");
-        Utils.simulateInput(nameInputs[1], CONFIG.defaultName);
+        Utils.simulateInput(nameInputs[1], Data.userName);
 
         const queryBtn = document.querySelector(
           ".ivu-form-item-content > .ivu-btn.ivu-btn-primary"
@@ -143,7 +146,7 @@
         if (!queryBtn) throw new Error("找不到查询按钮");
         queryBtn.click();
 
-        await Utils.sleep(1200);
+        await Utils.sleep(2000);
 
         // 2. 检查结果并点击编辑
         if (!Utils.isSelectorUnique(".table-tr")) {
@@ -235,17 +238,67 @@
   function initUI() {
     const container = DomHelper.createElement("div", CONFIG.containerStyle);
 
-    // 创建输入框
-    const input = DomHelper.createElement("input", CONFIG.inputStyle, {
-      type: "text",
-      placeholder: "请输入url",
+    // 创建折叠按钮
+    const toggleButton = DomHelper.createElement("button", {
+      position: "absolute",
+      right: "-30px",
+      top: "10px",
+      width: "25px",
+      height: "40px",
+      background: "#4CAF50",
+      color: "white",
+      border: "none",
+      borderRadius: "0 5px 5px 0",
+      cursor: "pointer",
+      fontSize: "12px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    });
+    toggleButton.innerHTML = "►";
+
+    // 创建内容容器
+    const contentContainer = DomHelper.createElement("div", {
+      transition: "all 0.3s ease",
+      overflow: "hidden",
     });
 
-    // 创建复选框容器
-    const checkboxContainer = DomHelper.createElement(
-      "div",
-      CONFIG.checkboxContainerStyle
+    // 创建用户名输入框
+    const userNameInput = DomHelper.createElement(
+      "input",
+      {
+        ...CONFIG.inputStyle,
+        width: "150px",
+        marginBottom: "5px",
+        display: "block",
+      },
+      {
+        type: "text",
+        placeholder: "请输入用户名",
+        value: Data.userName,
+      }
     );
+
+    // 创建URL输入框
+    const urlInput = DomHelper.createElement(
+      "input",
+      {
+        ...CONFIG.inputStyle,
+        width: "150px",
+        marginBottom: "5px",
+        display: "block",
+      },
+      {
+        type: "text",
+        placeholder: "请输入url",
+      }
+    );
+
+    // 创建复选框容器
+    const checkboxContainer = DomHelper.createElement("div", {
+      ...CONFIG.checkboxContainerStyle,
+      marginBottom: "5px",
+    });
 
     // 创建复选框
     const checkbox = DomHelper.createElement("input", CONFIG.checkboxStyle, {
@@ -262,29 +315,64 @@
     checkboxLabel.setAttribute("for", "showThemeCheckbox");
     checkboxLabel.textContent = "非人机";
 
-    // 添加复选框事件监听器
+    // 添加事件监听器
+    userNameInput.addEventListener("input", (e) => {
+      Data.userName = e.target.value.trim() || CONFIG.defaultName;
+    });
+
     checkbox.addEventListener("change", (e) => {
       Data.showTheme = e.target.checked;
     });
 
-    // 创建按钮
+    // 创建执行按钮
     const button = DomHelper.createElement("button", CONFIG.buttonStyle);
     button.textContent = "执行";
 
     button.addEventListener("click", async () => {
-      const url = input.value.trim();
+      const url = urlInput.value.trim();
       Data.url = url || "";
+      Data.userName = userNameInput.value.trim() || CONFIG.defaultName;
       await BusinessLogic.updateConfig();
-      input.value = "";
+      urlInput.value = "";
+    });
+
+    // 折叠功能
+    toggleButton.addEventListener("click", () => {
+      Data.isCollapsed = !Data.isCollapsed;
+      if (Data.isCollapsed) {
+        contentContainer.style.width = "0";
+        contentContainer.style.padding = "0";
+        contentContainer.style.height = "0";
+        toggleButton.innerHTML = "◄";
+        container.style.width = "25px";
+        container.style.padding = "0";
+        container.style.border = "none";
+        container.style.background = "transparent";
+        container.style.boxShadow = "none";
+      } else {
+        contentContainer.style.width = "auto";
+        contentContainer.style.padding = "0";
+        contentContainer.style.height = "auto";
+        toggleButton.innerHTML = "►";
+        container.style.width = "auto";
+        container.style.padding = "10px";
+        container.style.border = "1px solid #ccc";
+        container.style.background = "white";
+        container.style.boxShadow = "0 0 10px rgba(0,0,0,0.2)";
+      }
     });
 
     // 组装UI元素
     checkboxContainer.appendChild(checkbox);
     checkboxContainer.appendChild(checkboxLabel);
 
-    container.appendChild(input);
-    container.appendChild(checkboxContainer);
-    container.appendChild(button);
+    contentContainer.appendChild(userNameInput);
+    contentContainer.appendChild(urlInput);
+    contentContainer.appendChild(checkboxContainer);
+    contentContainer.appendChild(button);
+
+    container.appendChild(contentContainer);
+    container.appendChild(toggleButton);
     document.body.appendChild(container);
   }
 
