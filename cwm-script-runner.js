@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         cwm-srcipt-runner
 // @namespace    http://tampermonkey.net/
-// @version      1.7
+// @version      1.8
 // @description  try to take over the world!
 // @author       lgh
 // @match        https://cwm.gamegoing.com/strategy/*
@@ -57,12 +57,32 @@
     reset_Prod: "https://pic.stargamedjs.net/ext/v0.2.4-reset.js",
   };
 
+  // 存储工具函数
+  const Storage = {
+    save: (key, value) => {
+      try {
+        localStorage.setItem(`cwm_script_${key}`, value);
+      } catch (e) {
+        console.warn("Failed to save to localStorage:", e);
+      }
+    },
+
+    load: (key, defaultValue = "") => {
+      try {
+        return localStorage.getItem(`cwm_script_${key}`) || defaultValue;
+      } catch (e) {
+        console.warn("Failed to load from localStorage:", e);
+        return defaultValue;
+      }
+    },
+  };
+
   const Data = {
     showTheme: true,
     url: "",
-    userName: CONFIG.defaultName,
+    userName: Storage.load("userName", CONFIG.defaultName),
     isCollapsed: false,
-    transformUrl: string,
+    transformUrl: Storage.load("transformUrl", ""),
   };
 
   // 工具函数
@@ -228,6 +248,14 @@
           url: Data.url,
         };
       }
+      if (Data.transformUrl) {
+        firstUrlObj = {
+          ...firstUrlObj,
+          name: `name:woso,groupRate:1,limit:8000,level:1,childRate:1,hotRate:0,dev:0,logTest:1,transformRate:1,actions:wait&3000_click,transformUrl:${btoa(
+            Data.transformUrl
+          )}`,
+        };
+      }
       configObj.urls[0] = firstUrlObj;
       configObj.showTheme = Data.showTheme ? 1 : 0;
       return configObj;
@@ -294,6 +322,22 @@
       }
     );
 
+    // 创建transformUrl输入框
+    const transformUrlInput = DomHelper.createElement(
+      "input",
+      {
+        ...CONFIG.inputStyle,
+        width: "150px",
+        marginBottom: "5px",
+        display: "block",
+      },
+      {
+        type: "text",
+        placeholder: "请输入transformUrl",
+        value: Data.transformUrl,
+      }
+    );
+
     // 创建复选框容器
     const checkboxContainer = DomHelper.createElement("div", {
       ...CONFIG.checkboxContainerStyle,
@@ -320,6 +364,10 @@
       Data.userName = e.target.value.trim() || CONFIG.defaultName;
     });
 
+    transformUrlInput.addEventListener("input", (e) => {
+      Data.transformUrl = e.target.value.trim();
+    });
+
     checkbox.addEventListener("change", (e) => {
       Data.showTheme = e.target.checked;
     });
@@ -330,10 +378,33 @@
 
     button.addEventListener("click", async () => {
       const url = urlInput.value.trim();
+      const transformUrl = transformUrlInput.value.trim();
+      const userName = userNameInput.value.trim() || CONFIG.defaultName;
+
       Data.url = url || "";
-      Data.userName = userNameInput.value.trim() || CONFIG.defaultName;
+      Data.transformUrl = transformUrl || "";
+      Data.userName = userName;
+
+      if (!url) {
+        alert("请输入url");
+        return;
+      }
+      if (!transformUrl) {
+        alert("请输入transformUrl");
+        return;
+      }
+      if (!userName) {
+        alert("请输入userName");
+        return;
+      }
+
+      // 保存到localStorage
+      Storage.save("userName", userName);
+      Storage.save("transformUrl", transformUrl);
+
       await BusinessLogic.updateConfig();
       urlInput.value = "";
+      transformUrlInput.value = "";
     });
 
     // 折叠功能
@@ -368,6 +439,7 @@
 
     contentContainer.appendChild(userNameInput);
     contentContainer.appendChild(urlInput);
+    contentContainer.appendChild(transformUrlInput);
     contentContainer.appendChild(checkboxContainer);
     contentContainer.appendChild(button);
 
