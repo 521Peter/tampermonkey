@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         cwm-srcipt-runner
 // @namespace    http://tampermonkey.net/
-// @version      1.8
+// @version      1.9
 // @description  try to take over the world!
 // @author       lgh
 // @match        https://cwm.gamegoing.com/strategy/*
@@ -296,7 +296,7 @@
       "input",
       {
         ...CONFIG.inputStyle,
-        width: "150px",
+        width: "300px",
         marginBottom: "5px",
         display: "block",
       },
@@ -312,7 +312,7 @@
       "input",
       {
         ...CONFIG.inputStyle,
-        width: "150px",
+        width: "300px",
         marginBottom: "5px",
         display: "block",
       },
@@ -327,7 +327,7 @@
       "input",
       {
         ...CONFIG.inputStyle,
-        width: "150px",
+        width: "300px",
         marginBottom: "5px",
         display: "block",
       },
