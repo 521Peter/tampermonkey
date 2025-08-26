@@ -404,7 +404,6 @@
 
       await BusinessLogic.updateConfig();
       urlInput.value = "";
-      transformUrlInput.value = "";
     });
 
     // 折叠功能
