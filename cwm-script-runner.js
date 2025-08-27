@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         cwm-srcipt-runner
 // @namespace    http://tampermonkey.net/
-// @version      2.0
+// @version      2.1
 // @description  try to take over the world!
 // @author       lgh
 // @match        https://cwm.gamegoing.com/strategy/*
@@ -251,7 +251,7 @@
       if (Data.transformUrl) {
         firstUrlObj = {
           ...firstUrlObj,
-          name: `name:woso,groupRate:1,limit:8000,level:1,childRate:1,hotRate:0,dev:0,logTest:1,transformRate:1,actions:wait&3000_click,transformUrl:${btoa(
+          name: `name:woso,groupRate:1,limit:8000,level:1,childRate:1,hotRate:0,dev:1,logTest:1,transformRate:1,actions:wait&3000_click,transformUrl:${btoa(
             Data.transformUrl
           )}`,
         };
